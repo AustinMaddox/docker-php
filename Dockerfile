@@ -1,7 +1,11 @@
-FROM php:7.1-alpine
+FROM php:7.1-apache
+
+MAINTAINER "Austin Maddox" <austin@maddoxbox.com>
+
+RUN apt-get update
 
 # Install Xdebug extension.
-RUN apk add --no-cache \
+RUN apt-get install -y \
     autoconf \
     gcc \
     g++ \
@@ -9,23 +13,19 @@ RUN apk add --no-cache \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug
 
-# Install dumb-init.
-RUN apk add --no-cache \
-    dumb-init --repository http://dl-cdn.alpinelinux.org/alpine/v3.5/community/
+# Set the "ServerName" directive globally to suppress this message... "Could not reliably determine the server's fully qualified domain name, using #.#.#.#."
+COPY ./etc/apache2/conf-available/fqdn.conf /etc/apache2/conf-available/fqdn.conf
+RUN a2enconf fqdn
 
-# Install Composer.
-RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini"
-ENV COMPOSER_ALLOW_SUPERUSER 1
-ENV COMPOSER_HOME /composer
+# Define the default virtual host.
+COPY ./etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/000-default.conf
+RUN a2ensite 000-default \
+	&& a2enmod rewrite
 
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
-    && php -r "unlink('composer-setup.php');"
+# If needed, add a custom php.ini configuration.
+COPY ./usr/local/etc/php/php.ini /usr/local/etc/php/php.ini
 
-ENV GIT_COMMITTER_NAME php-cli
-ENV GIT_COMMITTER_EMAIL php-cli@localhost
-
-# Runs "/usr/bin/dumb-init -- /my/script --with --args"
-ENTRYPOINT ["/usr/bin/dumb-init", "--", "docker-php-entrypoint"]
-
-CMD ["php", "-a"]
+# Cleanup
+RUN apt-get clean \
+    && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
