@@ -24,6 +24,22 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 ENV GIT_COMMITTER_NAME php-cli
 ENV GIT_COMMITTER_EMAIL php-cli@localhost
 
+# Install GD library.
+RUN apk add --no-cache \
+    freetype \
+    freetype-dev \
+    libjpeg-turbo \
+    libjpeg-turbo-dev \
+    libpng \
+    libpng-dev \
+    && docker-php-ext-configure gd \
+    --with-freetype-dir=/usr/include/ \
+    --with-jpeg-dir=/usr/include/ \
+    --with-png-dir=/usr/include/ \
+    && NPROC=$(getconf _NPROCESSORS_ONLN) \
+    && docker-php-ext-install -j${NPROC} gd \
+    && apk del --no-cache freetype-dev libjpeg-turbo-dev libpng-dev
+
 # Install Xdebug extension.
 RUN apk add --no-cache \
     autoconf \
