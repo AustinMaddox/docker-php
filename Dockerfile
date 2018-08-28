@@ -6,7 +6,15 @@ RUN docker-php-ext-install \
     mysqli \
     pdo_mysql
 
-# Install Xdebug extension.
+# Install AWS CLI.
+RUN apk -v --update add \
+    groff \
+    less \
+    python \
+    py-pip \
+    && pip install --upgrade awscli python-magic \
+    && apk -v --purge del py-pip \
+    && rm /var/cache/apk/*
 
 # Install Composer.
 RUN apk add --no-cache \
