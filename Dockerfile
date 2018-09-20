@@ -1,4 +1,4 @@
-FROM php:7.1-apache
+FROM php:5.6-apache
 
 MAINTAINER "Austin Maddox" <austin@maddoxbox.com>
 
@@ -10,7 +10,7 @@ RUN apt-get install -y \
     gcc \
     g++ \
     make \
-    && pecl install xdebug \
+    && pecl install xdebug-2.5.5 \
     && docker-php-ext-enable xdebug
 
 # Set the "ServerName" directive globally to suppress this message... "Could not reliably determine the server's fully qualified domain name, using #.#.#.#."
