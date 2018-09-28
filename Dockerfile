@@ -26,7 +26,7 @@ RUN a2enconf fqdn
 # Define the default virtual host.
 COPY ./etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/000-default.conf
 RUN a2ensite 000-default \
-	&& a2enmod rewrite
+	&& a2enmod deflate rewrite
 
 # If needed, add a custom php.ini configuration.
 COPY ./usr/local/etc/php/php.ini /usr/local/etc/php/php.ini
