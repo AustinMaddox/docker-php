@@ -28,8 +28,11 @@ COPY ./etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available
 RUN a2ensite 000-default \
 	&& a2enmod deflate rewrite
 
-# If needed, add a custom php.ini configuration.
+# If needed, add any custom php.ini directives that will add/override the default configuration(s).
 COPY ./usr/local/etc/php/php.ini /usr/local/etc/php/php.ini
+
+# If needed, add any custom php.ini directives that will add/override the default configuration(s).
+COPY ./usr/local/etc/php/conf.d/ /usr/local/etc/php/conf.d/
 
 # Cleanup
 RUN apt-get clean \
