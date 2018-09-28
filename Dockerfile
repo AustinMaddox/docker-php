@@ -4,6 +4,12 @@ MAINTAINER "Austin Maddox" <austin@maddoxbox.com>
 
 RUN apt-get update
 
+# Install and enable Zend OPcache.
+RUN docker-php-ext-install \
+    opcache \
+    && docker-php-ext-enable \
+    opcache
+
 # Install Xdebug extension.
 RUN apt-get install -y \
     autoconf \
