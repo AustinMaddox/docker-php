@@ -2,6 +2,7 @@ FROM php:7.2-alpine
 
 RUN docker-php-ext-install \
     bcmath \
+    exif \
     mbstring \
     mysqli \
     pdo_mysql
