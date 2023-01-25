@@ -1,9 +1,8 @@
-FROM php:7.2-alpine
+FROM php:7.4-alpine
 
 RUN docker-php-ext-install \
     bcmath \
     exif \
-    mbstring \
     mysqli \
     pdo_mysql
 
@@ -11,7 +10,7 @@ RUN docker-php-ext-install \
 RUN apk -v --update add \
     groff \
     less \
-    python \
+    python3 \
     py-pip \
     && pip install --upgrade awscli python-magic \
     && apk -v --purge del py-pip \
@@ -42,9 +41,8 @@ RUN apk add --no-cache \
     libpng \
     libpng-dev \
     && docker-php-ext-configure gd \
-    --with-freetype-dir=/usr/include/ \
-    --with-jpeg-dir=/usr/include/ \
-    --with-png-dir=/usr/include/ \
+    --with-freetype=/usr/include/ \
+    --with-jpeg=/usr/include/ \
     && NPROC=$(getconf _NPROCESSORS_ONLN) \
     && docker-php-ext-install -j${NPROC} gd \
     && apk del --no-cache freetype-dev libjpeg-turbo-dev libpng-dev
@@ -55,12 +53,12 @@ RUN apk add --no-cache \
     gcc \
     g++ \
     make \
-    && pecl install xdebug \
+    && pecl install xdebug-3.1.5 \
     && docker-php-ext-enable xdebug
 
 # Install Zip.
 RUN apk add --no-cache \
-    zlib-dev \
+    libzip-dev \
     && docker-php-ext-install \
     zip
 
