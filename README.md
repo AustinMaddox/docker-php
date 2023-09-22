@@ -15,7 +15,7 @@ docker build --rm --force-rm --platform="linux/amd64" --tag="austinmaddox/docker
 ```
 
 ```shell
-`docker build --rm --force-rm --platform="linux/amd64" --tag="austinmaddox/docker-php:8.1-alpine" ./`
+docker build --rm --force-rm --platform="linux/amd64" --tag="austinmaddox/docker-php:8.1-alpine" ./
 ```
 
 ## Apache
