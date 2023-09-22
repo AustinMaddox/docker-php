@@ -1,4 +1,4 @@
-FROM php:7.4-alpine
+FROM php:8.1-alpine
 
 RUN docker-php-ext-install \
     bcmath \
@@ -61,12 +61,5 @@ RUN apk add --no-cache \
     libzip-dev \
     && docker-php-ext-install \
     zip
-
-# Install dumb-init.
-RUN apk add --no-cache \
-    dumb-init --repository http://dl-cdn.alpinelinux.org/alpine/v3.5/community/
-
-# Runs "/usr/bin/dumb-init -- /my/script --with --args"
-ENTRYPOINT ["/usr/bin/dumb-init", "--", "docker-php-entrypoint"]
 
 CMD ["php", "-a"]
